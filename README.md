@@ -16,7 +16,7 @@ gh-api-token = "<github api token>"
 gist-id="<id of gist>"
 ````
 
-Your GH api token needs to have gists access.
+Your GH api token needs to have general gists access, and access to given gist. 
 
 Make sure, you have needed libraries installed with `pip install -r requirements.txt`
 

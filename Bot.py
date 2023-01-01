@@ -53,7 +53,6 @@ def main():
     activity_comment = init_activity_comment(gist, name)
     processed_comments.append(activity_comment.id)
     while True:
-        print("Loop")
         schedule.run_pending()
         process_command(gist, name, processed_comments)
         time.sleep(1)
